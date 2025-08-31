@@ -171,8 +171,14 @@ input:focus {
 @media (max-width: 768px) {
     .navbar{
         width: 100%;
-        border-radius: 10px;
+        border-top-left-radius: 0 ;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+
     }
+
+    
 
     .table {
         display: block;
@@ -209,6 +215,7 @@ input:focus {
 
     .table td button {
         width: 100%;
+        margin: 5px;
     }
 }
 
