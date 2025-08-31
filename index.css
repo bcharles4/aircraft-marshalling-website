@@ -50,7 +50,7 @@ body{
   margin: 30px;
   background-color: #001925;
   padding: 50px;
-  border-left: 5px solid #5433FF;
+  border-left: 5px solid #999;
   clip-path: polygon(
     0 0,
     100% 0,
@@ -170,6 +170,11 @@ body{
   .reset-button:hover {
   background: #5433FF;
   color: #001925;
+}
+
+#loginBtn, #reset-btn {
+  background-color: white;
+  color: black;
 }
 
 
