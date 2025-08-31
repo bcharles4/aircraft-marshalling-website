@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="dashboard.css">
+  <title>Dashboard</title>
+  <style>
+    /* Simple modal style */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      width: 500px; /* Slightly wider to accommodate 2 columns */
+      max-width: 90%;
+    }
+    .modal-content h2 {
+      margin-top: 0;
+      background-color: #001925;
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .modal-content button {
+      background-color: green;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 0 auto;
+      font-weight: bold;
+    }
+    .close-btn {
+      float: right;
+      cursor: pointer;
+      font-size: 18px;
+      color: white;
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 10px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: bold;
+    }
+    .form-group input {
+      width: auto;
+      padding: 6px;
+    }
+
+    .edit-button {
+        background-color: blue;
+    }
+
+    /* Grid layout for modal data */
+    .data-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* 2 columns */
+      gap: 15px;
+      padding: 20px;
+      border: 5px solid #001925;
+      border-radius: 0 0 10px 10px;
+    }
+    .data-item {
+      margin-bottom: 10px;
+    }
+    .data-item.full-width {
+      grid-column: span 2; /* Make some items span both columns */
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="img-con">
+      <img src="logo.png" alt="Logo">
+    </div>
+    <ion-icon name="log-out" id="icon"></ion-icon>
+  </div>
+
+  <div class="table">
+    <table id="estimateTable">
+      <thead>
+        <tr>
+          <th>Student ID</th>
+          <th>Name</th>
+          <th>No. of Attempts</th>
+          <th>Final Score</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- View Modal with 2-column grid -->
+  <div id="viewModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('viewModal')">&times;</span>
+      <h2>Student Details</h2>
+      <div class="data-grid">
+        <div class="data-item full-width">
+          <p><strong>Student ID:</strong> <span id="viewStudentNumber"></span></p>
+        </div>
+        <div class="data-item">
+          <p><strong>Name:</strong> <span id="viewName"></span></p>
+        </div>
+        <div class="data-item">
+          <p><strong>Email:</strong> <span id="viewEmail"></span></p>
+        </div>
+ 
+        <div class="data-item">
+          <p><strong>Attempts:</strong> <span id="viewAttempts"></span></p>
+        </div>
+        <div class="data-item">
+          <p><strong>Score:</strong> <span id="viewScore"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('editModal')">&times;</span>
+      <h2>Edit Student</h2>
+      <form id="editForm">
+        <div class="form-group">
+          <label>Name:</label>
+          <input type="text" id="editName" readonly>
+        </div>
+        <div class="form-group">
+          <label>Attempts:</label>
+          <input type="number" id="editAttempts">
+        </div>
+        <div class="form-group">
+          <label>Score:</label>
+          <input type="number" id="editScore">
+        </div>
+        <center><button type="submit">Save</button></center>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <script>
+    const API_BASE = "https://aircraft-marshalling-f350337809da.herokuapp.com/api";
+    let usersCache = []; // keep users cached for student number lookup
+
+    // Fetch all users
+    async function fetchUsers() {
+      try {
+        const res = await fetch(`${API_BASE}/users`);
+        const users = await res.json();
+        usersCache = users;
+
+        const tableBody = document.querySelector("#estimateTable tbody");
+        tableBody.innerHTML = "";
+
+        users.forEach((user, index) => {
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+            <td>${String(index + 1).padStart(4, "0")}</td>
+            <td>${user.name}</td>
+            <td>${user.attempts || 0}</td>
+            <td>${user.score || 0}</td>
+            <td>
+              <button class="view-button" data-index="${index}">View</button>
+              <button class="edit-button" data-name="${user.name}" style="background-color: blue;">Edit</button>
+            </td>
+          `;
+
+          tableBody.appendChild(row);
+        });
+
+        // Attach events
+        document.querySelectorAll(".view-button").forEach(btn => {
+          btn.addEventListener("click", () => openView(btn.dataset.index));
+        });
+        document.querySelectorAll(".edit-button").forEach(btn => {
+          btn.addEventListener("click", () => openEdit(btn.dataset.name));
+        });
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    }
+
+    function closeModal(name) {
+      document.getElementById(name).style.display = "none";
+    }
+
+    // Open view modal by index
+    async function openView(index) {
+      try {
+        const user = usersCache[index];
+        if (!user) return;
+
+        document.getElementById("viewStudentNumber").textContent = String(Number(index) + 1).padStart(4, "0");
+        document.getElementById("viewName").textContent = user.name;
+        document.getElementById("viewAttempts").textContent = user.attempts || 0;
+        document.getElementById("viewScore").textContent = user.score || 0;
+        document.getElementById("viewEmail").textContent = user.email || "N/A";
+
+        document.getElementById("viewModal").style.display = "flex";
+      } catch (err) {
+        console.error("Fetch error:", err);
+        alert("Could not load user details.");
+      }
+    }
+
+    // Open edit modal by name
+    async function openEdit(name) {
+      try {
+        const res = await fetch(`${API_BASE}/users/name/${encodeURIComponent(name)}`);
+        if (!res.ok) throw new Error(`Error ${res.status}`);
+
+        const user = await res.json();
+
+        document.getElementById("editName").value = user.name || "";
+        document.getElementById("editAttempts").value = user.attempts ?? 0;
+        document.getElementById("editScore").value = user.score ?? 0;
+
+        document.getElementById("editModal").style.display = "flex";
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        alert("Could not load user for editing.");
+      }
+    }
+
+    // Save edit changes
+    document.getElementById("editForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const updatedUser = {
+        attempts: Number(document.getElementById("editAttempts").value),
+        score: Number(document.getElementById("editScore").value)
+      };
+      const name = document.getElementById("editName").value;
+
+      try {
+        const res = await fetch(`${API_BASE}/users/name/${encodeURIComponent(name)}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedUser)
+        });
+
+        if (res.ok) {
+          alert("User updated successfully!");
+          closeModal("editModal");
+          fetchUsers();
+        } else {
+          const data = await res.json();
+          alert(data.message || "Failed to update user");
+        }
+      } catch (err) {
+        console.error("Error updating user:", err);
+        alert("Server error while updating user.");
+      }
+    });
+
+    window.onload = fetchUsers;
+  </script>
+</body>
+</html>

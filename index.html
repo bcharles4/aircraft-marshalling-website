@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Aircraft Marshalling</title>
+</head>
+<body>
+    <center>
+    <div class="img-con">
+        <img src="logo.png" alt="">
+    </div>
+
+<div class="main-content">
+
+    <div class="form-container">
+  <div class="form">
+    <!-- <span class="heading">Aircraft Marshalling</span> -->
+    <span class="c1">Admin</span>
+
+        <input class="input" id="adminUsername" type="text" placeholder="Username:" />
+        <input class="input" id="adminPassword" type="password" placeholder="Password:" />
+
+        <div class="button-container">
+            <button class="send-button" id="loginBtn">Login</button>
+            <div class="reset-button-container">
+        <div class="reset-button" id="reset-btn"></div>
+      </div>
+        </div>
+  </div>
+</div>
+
+</div>
+
+</center>
+
+
+
+<!-- Modal -->
+<div id="modal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span id="closeModal" style="cursor:pointer; float:right;">&times;</span>
+    <h2 id="modalTitle">Student Details</h2>
+    <div id="modalBody"></div>
+    <div id="editControls" style="display:none;">
+      <input type="number" id="editScore" placeholder="Enter new score">
+      <button id="saveEdit">Save</button>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  document.getElementById("loginBtn").addEventListener("click", async () => {
+    const username = document.getElementById("adminUsername").value;
+    const password = document.getElementById("adminPassword").value;
+
+    try {
+      const res = await fetch("https://aircraft-marshalling-f350337809da.herokuapp.com/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })  // ✅ use username
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // Save admin session in localStorage
+        localStorage.setItem("admin", JSON.stringify(data.admin));
+
+        // Redirect to dashboard
+        window.location.href = "dashboard.html";
+      } else {
+        alert(data.message || "Login failed");
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      alert("Server error, please try again.");
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    background-image: url('bg-db.jpg');
+}
+.img-con {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    margin: 20px;
+
+}
+
+.img-con img {
+    width: 200px;
+    height: auto;
+
+}
+
+h3 {
+    color: white;
+    margin: 0;
+    font-size: 24px;
+}
+
+#icon {
+    color: white;
+    font-size: 34px;
+    cursor: pointer;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    border-radius: 40px;
+    width: 80%;
+
+    border-bottom: 3px solid white;
+
+    margin: 0 auto;
+
+
+}
+
+
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex; justify-content: center; align-items: center;
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+}
+
+input {
+  color: black;
+  height: 2vh;
+  border: none;
+
+  padding: 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
+}
+input:focus {
+  border-left: 1px solid #87a4b6;
+  background-color: #003840;
+  color: white;
+}
+
+/* Table Container */
+.table {
+     width: 75%;
+    max-height: 500px; /* Set a fixed height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    margin: 20px auto;
+
+    
+}
+
+/* Table Styling */
+.table table {
+    width: 100%;
+    border-collapse: collapse; /* Removes space between cells */
+    text-align: left;
+       overflow-x: auto;
+    font-weight: bold;
+}
+
+.table thead {
+    background-color: black; /* Dark background for header */
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Ensures it stays above other elements */
+}
+
+.table th {
+    padding: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Table Body */
+.table tbody tr {
+    border-bottom: 1px solid #e0e0e0; /* Adds a border between rows */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.table tbody tr:hover {
+    background-color: #f9f9f9; /* Light background on hover */
+}
+
+.table td {
+    padding: 12px 15px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Status Styling */
+.table td:nth-child(7) { /* Targets the "Status" column */
+    font-weight: bold;
+}
+
+.table td[data-status="Paid"] {
+    color: #28a745; /* Green for paid status */
+}
+
+.table td[data-status="Pending"] {
+    color: #ffc107; /* Yellow for pending status */
+}
+
+/* Action Button Styling */
+.table td button {
+    padding: 8px 12px;
+    background-color: #111;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s ease;
+}
+
+.table td button:hover {
+    background-color: #444; /* Darker background on hover */
+}
+
+
+#convert-to-invoice {
+    background-color: blue;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    .navbar{
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    .table {
+        display: block;
+    }
+
+    .table thead,
+    .table tbody,
+    .table th,
+    .table td,
+    .table tr {
+        display: block;
+    }
+
+    .table thead {
+        display: none; /* Hide headers on small screens */
+    }
+
+    .table td {
+        padding: 10px;
+        text-align: right;
+        position: relative;
+    }
+
+    .table td::before {
+        content: attr(data-label); /* Add data-label attribute to td for mobile view */
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-weight: bold;
+        text-transform: uppercase;
+
+    }
+
+    .table td button {
+        width: 100%;
+    }
+}
+
