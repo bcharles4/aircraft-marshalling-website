@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dashboard.css">
+    <title>Aircraft Marshalling</title>
+
+    <style>
+        .welcome {
+            text-align: center;
+            margin-top: 50px;
+            background-color: black;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 50%;
+
+            margin: 0 auto;
+        }
+
+        button {
+            background-color: white;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="img-con">
+        <img src="logo.png" alt="Logo">
+        </div>
+        <ion-icon name="log-out" id="logoutBtn"></ion-icon>
+    </div>
+    
+        <div class="welcome">
+            <h1>Welcome to Aircraft Marshalling</h1>
+            <button onclick="location.href='dashboard.html'">Manage Records</button>
+        </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
