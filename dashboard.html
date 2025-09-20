@@ -194,15 +194,16 @@
           const row = document.createElement("tr");
 
           row.innerHTML = `
-            <td>${String(index + 1).padStart(4, "0")}</td>
-            <td>${user.name}</td>
-            <td>${user.attempts || 0}</td>
-            <td>${user.score || 0}</td>
-            <td>
-              <button class="view-button" data-index="${index}">View</button>
-              <button class="edit-button" data-name="${user.name}" style="background-color: blue;">Edit</button>
-            </td>
-          `;
+          <td>${user.studentId || "N/A"}</td>
+          <td>${user.name}</td>
+          <td>${user.attempts || 0}</td>
+          <td>${user.score || 0}</td>
+          <td>
+            <button class="view-button" data-index="${index}">View</button>
+            <button class="edit-button" data-name="${user.name}" style="background-color: blue;">Edit</button>
+          </td>
+        `;
+
 
           tableBody.appendChild(row);
         });
